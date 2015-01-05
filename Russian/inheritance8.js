@@ -1,11 +1,9 @@
 ﻿var util = require('util');
 
 // Средство для переопределения функций
-function override(parent, fn) {
-  fn.inherited = parent.prototype[fn.name];
-  return function() {
-    return fn.apply(this, arguments);
-  }
+function override(child, fn) {
+  child.prototype[fn.name] = fn;
+  fn.inherited = child.super_.prototype[fn.name];
 }
 
 // Конструктор родительского класса
@@ -17,11 +15,13 @@ function ParentClass(par1, par2) {
 // Метод родительского класса
 ParentClass.prototype.methodName = function(par) {
   console.log('Parent method implementation: methodName("' + par + '")');
+  console.dir({t1:this})
+  this.parentField3 = par;
 };
 
 // Конструктор дочернего класса
 function ChildClass(par1, par2) {
-  this.constructor.super_.apply(this, arguments);
+  this.constructor.super_.call(this, par1, par2);
   this.childField1 = par1;
   this.childField2 = par2;
 }
@@ -30,11 +30,12 @@ function ChildClass(par1, par2) {
 util.inherits(ChildClass, ParentClass);
 
 // Переопределение метода в дочернем классе
-ChildClass.prototype.methodName = override(ParentClass, function methodName(par) {
+override(ChildClass, function methodName(par) {
   // Вызов метода родительского класса
-  methodName.inherited(par);
+  methodName.inherited.call(this, par);
   // Собственный функционал
   console.log('Child method implementation: methodName("' + par + '")');
+  this.childField3 = par;
 });
 
 // Создание объекта дочернего класса
