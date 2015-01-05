@@ -1,10 +1,19 @@
-﻿var util = require('util');
-
-// Средство для переопределения функций
-function override(child, fn) {
-  child.prototype[fn.name] = fn;
-  fn.inherited = child.super_.prototype[fn.name];
-}
+﻿// Средство для переопределения функций
+function inherits(child, parent) {
+  child.super_ = parent;
+  child.prototype = Object.create(parent.prototype, {
+    constructor: {
+      value: child,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  child.override = function(fn) {
+    child.prototype[fn.name] = fn;
+    fn.inherited = parent.prototype[fn.name];
+  };
+};
 
 // Конструктор родительского класса
 function ParentClass(par1, par2) {
@@ -25,10 +34,10 @@ function ChildClass(par1, par2) {
 }
 
 // Наследование
-util.inherits(ChildClass, ParentClass);
+inherits(ChildClass, ParentClass);
 
 // Переопределение метода в дочернем классе
-override(ChildClass, function methodName(par) {
+ChildClass.override(function methodName(par) {
   // Вызов метода родительского класса
   methodName.inherited.call(this, par);
   // Собственный функционал

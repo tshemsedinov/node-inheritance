@@ -1,6 +1,4 @@
-﻿var util = require('util');
-
-function speedTest(caption, count, fn) {
+﻿function speedTest(caption, count, fn) {
   console.log(caption);
   var startTime = new Date().getTime();
   for (var i = 0; i < count; i++) fn();
@@ -9,10 +7,21 @@ function speedTest(caption, count, fn) {
   console.log('Processing time: ' + processingTime + '\n');
 }
 
-function override(child, fn) {
-  child.prototype[fn.name] = fn;
-  fn.inherited = child.super_.prototype[fn.name];
-}
+function inherits(child, parent) {
+  child.super_ = parent;
+  child.prototype = Object.create(parent.prototype, {
+    constructor: {
+      value: child,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  child.override = function(fn) {
+    child.prototype[fn.name] = fn;
+    fn.inherited = parent.prototype[fn.name];
+  };
+};
 
 function ParentClass(par1, par2) {
   this.parentField1 = par1;
@@ -29,9 +38,9 @@ function ChildClass(par1, par2) {
   this.childField2 = par2;
 }
 
-util.inherits(ChildClass, ParentClass);
+inherits(ChildClass, ParentClass);
 
-override(ChildClass, function methodName(par) {
+ChildClass.override(function methodName(par) {
   methodName.inherited.call(this, par);
   this.childField3 = par;
 });
