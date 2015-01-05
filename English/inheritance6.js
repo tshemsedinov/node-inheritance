@@ -16,7 +16,6 @@ function ParentClass(par1, par2) {
 // Parent class method
 ParentClass.prototype.methodName = function(par) {
   console.log('Parent method implementation: methodName("' + par + '")');
-  console.dir(this);
 };
 
 // Child class constructor
@@ -35,7 +34,6 @@ ChildClass.prototype.methodName = override(ParentClass, function methodName(par)
   methodName.inherited.apply(this, arguments);
   // Method code
   console.log('Child method implementation: methodName("' + par + '")');
-  console.dir(this);
 });
 
 // Child class instantiation
