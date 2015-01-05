@@ -1,12 +1,9 @@
 ﻿var util = require('util');
 
-// Define override/inherited methods for built-in Function class
-
-function override(parent, fn) {
-  fn.inherited = parent.prototype[fn.name];
-  return function() {
-    return fn.apply(this, arguments);
-  }
+// Define override/inherited methods
+function override(child, fn) {
+  child.prototype[fn.name] = fn;
+  fn.inherited = child.super_.prototype[fn.name];
 }
 
 // Parent class constructor
@@ -22,7 +19,7 @@ ParentClass.prototype.methodName = function(par) {
 
 // Child class constructor
 function ChildClass(par1, par2) {
-  this.constructor.super_.apply(this, arguments);
+  this.constructor.super_.call(this, par1, par2);
   this.childField1 = par1;
   this.childField2 = par2;
 }
@@ -31,9 +28,9 @@ function ChildClass(par1, par2) {
 util.inherits(ChildClass, ParentClass);
 
 // Override method in child
-ChildClass.prototype.methodName = override(ParentClass, function methodName(par) {
+override(ChildClass, function methodName(par) {
   // Invoke inherited method from parent class
-  methodName.inherited(par);
+  methodName.inherited.call(this, par);
   // Method code
   console.log('Child method implementation: methodName("' + par + '")');
 });

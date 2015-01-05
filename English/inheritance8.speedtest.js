@@ -9,11 +9,9 @@ function speedTest(caption, count, fn) {
   console.log('Processing time: ' + processingTime + '\n');
 }
 
-function override(parent, fn) {
-  fn.inherited = parent.prototype[fn.name];
-  return function() {
-    return fn.apply(this, arguments);
-  }
+function override(child, fn) {
+  child.prototype[fn.name] = fn;
+  fn.inherited = child.super_.prototype[fn.name];
 }
 
 function ParentClass(par1, par2) {
@@ -26,15 +24,15 @@ ParentClass.prototype.methodName = function(par) {
 };
 
 function ChildClass(par1, par2) {
-  this.constructor.super_.apply(this, arguments);
+  this.constructor.super_.call(this, par1, par2);
   this.childField1 = par1;
   this.childField2 = par2;
 }
 
 util.inherits(ChildClass, ParentClass);
 
-ChildClass.prototype.methodName = override(ParentClass, function methodName(par) {
-  methodName.inherited(par);
+override(ChildClass, function methodName(par) {
+  methodName.inherited.call(this, par);
   this.childField3 = par;
 });
 
