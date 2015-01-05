@@ -30,7 +30,7 @@ util.inherits(ChildClass, ParentClass);
 // Переопределение метода в дочернем классе
 ChildClass.prototype.methodName = override(ParentClass, function methodName(par) {
   // Вызов метода родительского класса
-  methodName.inherited(par); // или methodName.inherited.apply(this, arguments);
+  methodName.inherited.apply(this, arguments); // methodName.inherited(par);
   // Собственный функционал
   console.log('Child method implementation: methodName("' + par + '")');
 });

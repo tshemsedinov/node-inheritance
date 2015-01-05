@@ -32,7 +32,7 @@ function ChildClass(par1, par2) {
 util.inherits(ChildClass, ParentClass);
 
 ChildClass.prototype.methodName = override(ParentClass, function methodName(par) {
-  methodName.inherited(par); // или methodName.inherited.apply(this, arguments);
+  methodName.inherited.apply(this, arguments); // methodName.inherited(par);
   this.childField3 = par;
 });
 
