@@ -1,12 +1,9 @@
 ﻿var util = require('util');
 
 // Средство для переопределения функций
-function override(fn) {
-  var name = fn.name;
-  return function() {
-    this.inherited = this.constructor.super_.prototype[name];
-    return fn.apply(this, arguments);
-  }
+function override(child, fn) {
+  child.prototype[fn.name] = fn;
+  fn.inherited = child.super_.prototype[fn.name];
 }
 
 // Конструктор родительского класса
@@ -22,7 +19,7 @@ ParentClass.prototype.methodName = function(par) {
 
 // Конструктор дочернего класса
 function ChildClass(par1, par2) {
-  ChildClass.super_.apply(this, arguments);
+  ChildClass.super_.call(this, par1, par2);
   this.childField1 = par1;
   this.childField2 = par2;
 }
@@ -31,22 +28,41 @@ function ChildClass(par1, par2) {
 util.inherits(ChildClass, ParentClass);
 
 // Переопределение метода в дочернем классе
-ChildClass.prototype.methodName = override(function methodName(par) {
+override(ChildClass, function methodName(par) {
   // Вызов метода родительского класса
-  this.inherited(par); // или this.inherited.apply(this, arguments);
+  methodName.inherited.call(this, par);
   // Собственный функционал
   console.log('Child method implementation: methodName("' + par + '")');
 });
 
+// Конструктор очень дочернего класса
+function VeryChildClass(par1, par2) {
+  VeryChildClass.super_.call(this, par1, par2);
+  this.childField1 = par1;
+  this.childField2 = par2;
+}
+
+// Наследование
+util.inherits(VeryChildClass, ChildClass);
+
+// Переопределение метода в очень дочернем классе
+override(VeryChildClass, function methodName(par) {
+  // Вызов метода родительского класса
+  methodName.inherited.call(this, par);
+  // Собственный функционал
+  console.log('Very child method implementation: methodName("' + par + '")');
+});
+
 // Создание объекта дочернего класса
-var childClassInstance = new ChildClass('Lev', 'Nikolayevich');
+var veryChildClassInstance = new VeryChildClass('Lev', 'Nikolayevich');
 
 // Проверка результатов
-childClassInstance.methodName('Tolstoy');
+veryChildClassInstance.methodName('Tolstoy');
 
 /* Консоль:
 
 Parent method implementation: methodName("Tolstoy")
 Child method implementation: methodName("Tolstoy")
+Very child method implementation: methodName("Tolstoy")
 
 */

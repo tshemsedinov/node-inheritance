@@ -19,7 +19,7 @@ ParentClass.prototype.methodName = function(par) {
 };
 
 function ChildClass(par1, par2) {
-  this.constructor.super_.apply(this, arguments);
+  ChildClass.super_.apply(this, arguments);
   this.childField1 = par1;
   this.childField2 = par2;
 }
@@ -27,7 +27,7 @@ function ChildClass(par1, par2) {
 util.inherits(ChildClass, ParentClass);
 
 ChildClass.prototype.methodName = function(par) {
-  this.constructor.super_.prototype.methodName.apply(this, arguments);
+  ChildClass.super_.prototype.methodName.apply(this, arguments);
   this.childField3 = par;
 };
 

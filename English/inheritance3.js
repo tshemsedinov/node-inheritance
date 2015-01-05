@@ -13,7 +13,7 @@ ParentClass.prototype.methodName = function(par) {
 
 // Child class constructor
 function ChildClass(par1, par2) {
-  this.constructor.super_.apply(this, arguments);
+  ChildClass.super_.apply(this, arguments);
   this.childField1 = par1;
   this.childField2 = par2;
 }
@@ -24,7 +24,7 @@ util.inherits(ChildClass, ParentClass);
 // Override method in child
 ChildClass.prototype.methodName = function(par) {
   // Invoke inherited method from parent class
-  this.constructor.super_.prototype.methodName.apply(this, arguments);
+  ChildClass.super_.prototype.methodName.apply(this, arguments);
   // Method code
   console.log('Child method implementation: methodName("' + par + '")');
 };

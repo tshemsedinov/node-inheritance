@@ -13,7 +13,7 @@ ParentClass.prototype.methodName = function(par) {
 
 // Конструктор дочернего класса
 function ChildClass(par1, par2) {
-  this.constructor.super_.apply(this, arguments);
+  ChildClass.super_.apply(this, arguments);
   this.childField1 = par1;
   this.childField2 = par2;
 }
@@ -24,7 +24,7 @@ util.inherits(ChildClass, ParentClass);
 // Переопределение метода в дочернем классе
 ChildClass.prototype.methodName = function(par) {
   // Вызов метода родительского класса
-  this.constructor.super_.prototype.methodName.apply(this, arguments);
+  ChildClass.super_.prototype.methodName.apply(this, arguments);
   // Собственный функционал
   console.log('Child method implementation: methodName("' + par + '")');
 };

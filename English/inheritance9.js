@@ -28,7 +28,7 @@ ParentClass.prototype.methodName = function(par) {
 
 // Child class constructor
 function ChildClass(par1, par2) {
-  this.constructor.super_.call(this, par1, par2);
+  ChildClass.super_.call(this, par1, par2);
   this.childField1 = par1;
   this.childField2 = par2;
 }
